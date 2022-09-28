@@ -17,21 +17,21 @@ class Person:
         self.base_hp = hp
         self.base_mp = mp
         self.base_atk = atk
-        self.maxhp = self.base_hp + int(self.level * 0.5 * self.base_hp) + int(self.level * 0.5)
+        self.maxhp = self.base_hp + int(self.level * 0.5 * self.base_hp) + int(level * 0.5)
         self.hp = self.maxhp
-        self.maxmp = self.base_mp + int(self.level * 0.25 * self.base_mp) + int(self.level * 0.25)
+        self.maxmp = self.base_mp + int(self.level * 0.25 * self.base_mp) + int(level * 0.25)
         self.mp = self.maxmp
-        self.atkl = self.base_atk - 2 + int(self.level * 1.2)
-        self.atkh = self.base_atk + 2 + int(self.level * 1.2)
+        self.atkl = self.base_atk - 2 + int(self.level * 1.1)
+        self.atkh = self.base_atk + 2 + int(self.level * 1.1)
         self.df = df + int(self.level * 0.34)
         self.magic = magic
         self.action = ["Attack","Magic","Items"]
         self.name = name
         self.party_color = party_color
         self.items = items
-        self.xp = 0
-        self.maxxp = 10 + level * 7 + int(self.level * 0.85)
+        self.xp = 15
         self.base_xp = 10
+        self.maxxp = self.base_xp + level * 5 + int(self.level * 0.8)
         self.xp_val = xp_val
 
     def get_base(self, i):
@@ -48,13 +48,15 @@ class Person:
             return 44
 
     def generate_dmg(self):
+        print("low: ", self.atkl, "high:", self.atkh)
         return random.randrange(self.atkl,self.atkh)
 
     def take_dmg(self,dmg):
-        self.hp -= dmg
+        dmg_taken = int(dmg - self.df * 0.05)
+        self.hp -= dmg_taken
         if self.hp < 0:
             self.hp = 0
-        return self.hp
+        return dmg_taken
 
     def heal(self, dmg):
         self.hp += dmg
@@ -119,9 +121,11 @@ class Person:
 
     def print_stats(self):
         print("======= " + self.name + " =======")
-        print("|| Lvl: " + str(self.get_char_level()) +
-              " || XP: " + str(self.get_xp()) + "/" + str(self.get_maxxp()) + " ||\n" +
-              "|| HP: " + self.party_color + str(self.get_hp()) + self.party_color + "/" + str(self.get_maxhp()) + bcolors.ENDC +
+        if self.xp_val == 0:
+            print("|| Lvl: " + str(self.get_char_level()) +
+                  " || XP: " + str(self.get_xp()) + "/" + str(self.get_maxxp()) + " ||")
+
+        print("|| HP: " + self.party_color + str(self.get_hp()) + self.party_color + "/" + str(self.get_maxhp()) + bcolors.ENDC +
               " MP: " + bcolors.OKBLUE + str(self.get_mp()) + "/" + str(self.get_maxmp()) + bcolors.ENDC + " ||")
 
     def xp_increase(self, xp_gain):
@@ -129,13 +133,13 @@ class Person:
         if self.xp > self.maxxp:
             self.xp = 0
             self.level += 1
-            self.maxhp = self.get_base("hp") + int((self.get_char_level()-1) * 0.5 * self.get_base("hp")) + int(self.get_char_level() * 0.5)
+            self.maxhp = self.maxhp + int((self.get_char_level()-1) * 0.5 * self.get_base("hp")) + int(self.get_char_level() * 0.5)
             self.hp = self.get_maxhp()
-            self.maxmp = self.get_base("mp") + int((self.get_char_level()-1) * 0.25 * self.get_base("mp")) + int(self.get_char_level() * 0.25)
+            self.maxmp = self.maxmp + int((self.get_char_level()-1) * 0.25 * self.get_base("mp")) + int(self.get_char_level() * 0.25)
             self.mp = self.get_maxmp()
-            self.atkl = self.atkl + int((self.get_char_level()-1) * 1.2)
-            self.atkh = self.atkh + int((self.get_char_level()-1) * 1.2)
+            self.atkl = self.atkl + int((self.get_char_level()-1) * 1.1)
+            self.atkh = self.atkh + int((self.get_char_level()-1) * 1.1)
             self.df = self.df + int(self.level * 0.34)
-            self.maxxp = self.get_base("xp") + self.get_char_level() * 7 + int((self.get_char_level()-1) * 0.85)
+            self.maxxp = self.get_base("xp") + self.get_char_level() * 5 + int((self.get_char_level()-1) * 0.8)
             print("You've reached level " + str(self.get_char_level()) + "!!!")
 

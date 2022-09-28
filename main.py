@@ -1,5 +1,5 @@
 from classes.game import Person, bcolors
-from classes.magic import  Spell
+from classes.magic import Spell
 from classes.inventory import Item
 
 #create magic
@@ -25,7 +25,7 @@ player1 = Person(1, 20, 10, 5, 5, magicc, "Player1", bcolors.OKGREEN, player_ite
 player2 = Person(1, 20, 10, 5, 5, [], "Player2", bcolors.OKBLUE, [], 0)
 
 #create enemies
-enemy = Person(2, 14, 0, 4, 0, [], "Enemy", bcolors.FAIL, [], 10)
+enemy = Person(1, 15, 0, 3, 2, [], "Enemy", bcolors.FAIL, [], 10)
 
 running = True
 
@@ -44,8 +44,8 @@ while running:
 
     if index == 0:
         dmg = player.generate_dmg()
-        enemy.take_dmg(dmg)
-        print(player.name, "attacked for:", dmg, "points of damage")
+        dmg_taken = enemy.take_dmg(dmg)
+        print(player.name, "attacked for:", dmg_taken, "points of damage")
 
     elif index == 1:
         if player.choose_magic() == -1:
@@ -70,7 +70,8 @@ while running:
 
             if spell.type == ("nature" or "light"):
                 player.heal(magic_dmg)
-                print(player.name, "healed for: ", magic_dmg, "points of HP. Current HP: ", bcolors.OKGREEN + str(player.get_hp()) + "/" + str(player.get_maxhp()) + bcolors.ENDC)
+                print(player.name, "healed for: ", magic_dmg, "points of HP. Current HP: ", bcolors.OKGREEN +
+                      str(player.get_hp()) + "/" + str(player.get_maxhp()) + bcolors.ENDC)
             else:
                 enemy.take_dmg(magic_dmg)
                 print(bcolors.OKBLUE + "\n" + spell.name + " deals", str(magic_dmg), "points of damage" + bcolors.ENDC)
@@ -117,12 +118,11 @@ while running:
     else:
         enemy_choice = 1
         enemy_dmg = enemy.generate_dmg()
-        player.take_dmg(enemy_dmg)
-        print(enemy.name, "attacked for:", enemy_dmg, "points of damage")
+        dmg_taken = player.take_dmg(enemy_dmg)
+        print(enemy.name, "attacked for:", dmg_taken , "points of damage")
 
     if player.get_hp() == 0:
         print(bcolors.FAIL + "You have been defeated" + bcolors.ENDC)
         enemy.print_stats()
         player.print_stats()
         running = False
-
