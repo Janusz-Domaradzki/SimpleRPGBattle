@@ -1,6 +1,5 @@
 import random
 
-
 class bcolors:
         HEADER = '\033[95m'
         OKBLUE = '\033[94m'
@@ -29,7 +28,7 @@ class Person:
         self.name = name
         self.party_color = party_color
         self.items = items
-        self.xp = 15
+        self.xp = 0
         self.base_xp = 10
         self.maxxp = self.base_xp + level * 5 + int(self.level * 0.8)
         self.xp_val = xp_val
@@ -48,11 +47,13 @@ class Person:
             return 44
 
     def generate_dmg(self):
-        print("low: ", self.atkl, "high:", self.atkh)
         return random.randrange(self.atkl,self.atkh)
 
     def take_dmg(self,dmg):
-        dmg_taken = int(dmg - self.df * 0.05)
+        dmg_taken = int(dmg - self.df * 0.02)
+        if dmg_taken <= 0:
+            dmg_taken = 0
+
         self.hp -= dmg_taken
         if self.hp < 0:
             self.hp = 0
@@ -120,17 +121,16 @@ class Person:
                 i += 1
 
     def print_stats(self):
-        print("======= " + self.name + " =======")
-        if self.xp_val == 0:
-            print("|| Lvl: " + str(self.get_char_level()) +
-                  " || XP: " + str(self.get_xp()) + "/" + str(self.get_maxxp()) + " ||")
+        print("==== " + self.name + " == Lvl: " + str(self.get_char_level()) + " ====")
+        if self.xp_val == -1:
+            print("||  XP: " + str(self.get_xp()) + "/" + str(self.get_maxxp()) + "  ||")
 
-        print("|| HP: " + self.party_color + str(self.get_hp()) + self.party_color + "/" + str(self.get_maxhp()) + bcolors.ENDC +
-              " MP: " + bcolors.OKBLUE + str(self.get_mp()) + "/" + str(self.get_maxmp()) + bcolors.ENDC + " ||")
+        print("||  HP: " + self.party_color + str(self.get_hp()) + self.party_color + "/" + str(self.get_maxhp()) + bcolors.ENDC +
+              " MP: " + bcolors.OKBLUE + str(self.get_mp()) + "/" + str(self.get_maxmp()) + bcolors.ENDC + "  ||")
 
     def xp_increase(self, xp_gain):
         self.xp += xp_gain
-        if self.xp > self.maxxp:
+        if self.xp >= self.maxxp:
             self.xp = 0
             self.level += 1
             self.maxhp = self.maxhp + int((self.get_char_level()-1) * 0.5 * self.get_base("hp")) + int(self.get_char_level() * 0.5)

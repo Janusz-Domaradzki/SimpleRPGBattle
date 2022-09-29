@@ -3,10 +3,10 @@ from classes.magic import Spell
 from classes.inventory import Item
 
 #create magic
-fire = Spell("Fire", 5, 8, "elemental")
+fire = Spell("Fire", 5, 10, "elemental")
 water = Spell("Water", 2, 4, "elemental")
-earth = Spell("Earth", 3, 5, "elemental")
-heal = Spell("Heal", 5, 4, "light")
+earth = Spell("Earth", 3, 6, "elemental")
+heal = Spell("Heal", 5, 5, "nature")
 
 magicc = [fire, water, earth, heal]
 
@@ -20,12 +20,12 @@ grenade = Item("Grenade", "attack", "Deals 10 damage", 10)
 player_items = [potion, elixer, grenade]
 
 #create players
-player1 = Person(1, 20, 10, 5, 5, magicc, "Player1", bcolors.OKGREEN, player_items, 0)
+player1 = Person(1, 20, 10, 5, 5, magicc, "Player1", bcolors.OKGREEN, player_items, -1)
 
-player2 = Person(1, 20, 10, 5, 5, [], "Player2", bcolors.OKBLUE, [], 0)
+player2 = Person(1, 20, 10, 5, 5, [], "Player2", bcolors.OKBLUE, [], -1)
 
 #create enemies
-enemy = Person(1, 15, 0, 3, 2, [], "Enemy", bcolors.FAIL, [], 10)
+enemy = Person(3, 15, 0, 3, 2, [], "Enemy", bcolors.FAIL, [], 10)
 
 running = True
 
@@ -57,7 +57,7 @@ while running:
                 continue
 
             spell = player.magic[magic_choice]
-            magic_dmg = spell.generate_dmg()
+            magic_dmg = spell.generate_dmg(player)
             cost = spell.cost
 
             current_mp = player.get_mp()
@@ -68,7 +68,7 @@ while running:
 
             player.reduce_mp(cost)
 
-            if spell.type == ("nature" or "light"):
+            if spell.typee == ("nature" or "light"):
                 player.heal(magic_dmg)
                 print(player.name, "healed for: ", magic_dmg, "points of HP. Current HP: ", bcolors.OKGREEN +
                       str(player.get_hp()) + "/" + str(player.get_maxhp()) + bcolors.ENDC)
